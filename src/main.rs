@@ -43,11 +43,37 @@ impl Room {
 fn main() {
     let rooms = vec![
         Room {
-            description: "You find yourself in a room. There is a door to the south.".to_string(),
+            description: "You find yourself in a room. There is a door to the south and a door to the east.".to_string(),
             exits: vec![
                 Exit {
                     direction: South,
+                    target: 2,
+                },
+                Exit {
+                    direction: East,
                     target: 1,
+                },
+            ],
+        },
+        Room {
+            description: "You find yourself in a room. There is a door to the west and a door to the south.".to_string(),
+            exits: vec![
+                Exit {
+                    direction: West,
+                    target: 0,
+                },
+                Exit {
+                    direction: South,
+                    target: 3,
+                },
+            ],
+        },
+        Room {
+            description: "You find yourself in a room. There is a door to the north.".to_string(),
+            exits: vec![
+                Exit {
+                    direction: North,
+                    target: 0,
                 },
             ],
         },
@@ -55,12 +81,12 @@ fn main() {
             description: "You find yourself in a room. There is a door to the north and a door to the south.".to_string(),
             exits: vec![
                 Exit {
-                    direction: South,
-                    target: 2,
+                    direction: North,
+                    target: 1,
                 },
                 Exit {
-                    direction: North,
-                    target: 0,
+                    direction: South,
+                    target: 4,
                 },
             ],
         },

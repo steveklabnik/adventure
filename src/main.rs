@@ -72,9 +72,6 @@ fn main() {
 
     println!("* * * A D V E N T U R E * * *\n\n");
 
-    let mut command: Option<Command> = None;
-    let mut stdin = io::stdin();
-
     while !rooms[current_room].is_escape() {
         current_room = enter(&rooms[current_room]);
     }

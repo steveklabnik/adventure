@@ -8,7 +8,9 @@ enum Command {
 #[deriving(PartialEq)]
 enum Direction {
     North,
+    East,
     South,
+    West,
 }
 
 struct Exit {
@@ -89,7 +91,9 @@ fn enter(room: &Room) -> uint {
         for exit in room.exits.iter() {
             match exit.direction {
                 North => println!("* Go (n)orth"),
+                East  => println!("* Go (e)ast"),
                 South => println!("* Go (s)outh"),
+                West  => println!("* Go (w)est"),
             }
         }
 
@@ -97,7 +101,9 @@ fn enter(room: &Room) -> uint {
 
         command = match input.as_slice().trim() {
             "n" if room.can_go(North) => Some(Go(North)),
+            "e" if room.can_go(East)  => Some(Go(East)),
             "s" if room.can_go(South) => Some(Go(South)),
+            "w" if room.can_go(West)  => Some(Go(West)),
             _   => {
                 println!("Please type a valid command.");
                 continue;
@@ -107,7 +113,9 @@ fn enter(room: &Room) -> uint {
 
     let next_room = match command.unwrap() {
         Go(North) => room.exit_to(North),
+        Go(East)  => room.exit_to(East),
         Go(South) => room.exit_to(South),
+        Go(West)  => room.exit_to(West),
     };
 
     next_room as uint

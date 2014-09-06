@@ -2,6 +2,11 @@ use std::io;
 
 #[deriving(PartialEq)]
 enum Command {
+    Go(Direction),
+}
+
+#[deriving(PartialEq)]
+enum Direction {
     North,
     South,
 }
@@ -20,7 +25,7 @@ fn main() {
         let input = stdin.read_line().ok().expect("Failed to read line");
 
         command = match input.as_slice().trim() {
-            "s" => Some(South),
+            "s" => Some(Go(South)),
             _   => {
                 println!("Please type a command.");
                 continue;
@@ -29,8 +34,8 @@ fn main() {
     }
 
     match command.unwrap() {
-        South => println!("Not implemented"),
-        North => println!("Not implemented"),
+        Go(North) => println!("Not implemented"),
+        Go(South) => println!("Not implemented"),
     }
 
     command = None;
@@ -44,8 +49,8 @@ fn main() {
         let input = stdin.read_line().ok().expect("Failed to read line");
 
         command = match input.as_slice().trim() {
-            "s" => Some(South),
-            "n" => Some(North),
+            "s" => Some(Go(South)),
+            "n" => Some(Go(North)),
             _   => {
                 println!("Please type a command.");
                 continue;
@@ -54,8 +59,8 @@ fn main() {
     }
 
     match command.unwrap() {
-        North => println!("Not implemented"),
-        South => println!("Not implemented"),
+        Go(North) => println!("Not implemented"),
+        Go(South) => println!("Not implemented"),
     }
 
     command = None;

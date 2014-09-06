@@ -11,7 +11,20 @@ enum Direction {
     South,
 }
 
+struct Room {
+    exits: Vec<Direction>,
+}
+
 fn main() {
+    let rooms = vec![
+        Room {
+            exits: vec![South],
+        },
+        Room {
+            exits: vec![North, South],
+        },
+    ];
+
     println!("* * * A D V E N T U R E * * *\n\n");
 
     let mut command: Option<Command> = None;

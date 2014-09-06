@@ -1,0 +1,5 @@
+[package]
+
+name = "adventure"
+version = "0.0.1"
+authors = ["Steve Klabnik <steve@steveklabnik.com>"]

@@ -31,6 +31,10 @@ impl Room {
                   .unwrap()
                   .target
     }
+
+    fn is_escape(&self) -> bool {
+        self.exits.len() == 0
+    }
 }
 
 fn main() {
@@ -55,6 +59,9 @@ fn main() {
                 },
             ],
         },
+        Room {
+            exits: vec![],
+        }
     ];
 
     let mut current_room = 0;
@@ -64,10 +71,11 @@ fn main() {
     let mut command: Option<Command> = None;
     let mut stdin = io::stdin();
 
-    while current_room != 2 { // hard code the exit for now...
+    while !rooms[current_room].is_escape() {
         current_room = enter(&rooms[current_room]);
     }
 
+    println!("Congrats! You've escaped.");
 }
 
 fn enter(room: &Room) -> uint {

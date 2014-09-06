@@ -17,6 +17,7 @@ struct Exit {
 }
 
 struct Room {
+    description: String,
     exits: Vec<Exit>,
 }
 
@@ -40,6 +41,7 @@ impl Room {
 fn main() {
     let rooms = vec![
         Room {
+            description: "You find yourself in a room. There is a door to the south.".to_string(),
             exits: vec![
                 Exit {
                     direction: South,
@@ -48,6 +50,7 @@ fn main() {
             ],
         },
         Room {
+            description: "You find yourself in a room. There is a door to the north and a door to the south.".to_string(),
             exits: vec![
                 Exit {
                     direction: South,
@@ -60,6 +63,7 @@ fn main() {
             ],
         },
         Room {
+            description: "Dungeon exit".to_string(),
             exits: vec![],
         }
     ];
@@ -82,7 +86,7 @@ fn enter(room: &Room) -> uint {
     let mut command: Option<Command> = None;
 
     while command == None {
-        println!("You find yourself in a room. There is a door to the south.");
+        println!("{}", room.description);
         println!("\nWhat do you do?\n");
 
         for exit in room.exits.iter() {

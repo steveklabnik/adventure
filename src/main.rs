@@ -11,17 +11,36 @@ enum Direction {
     South,
 }
 
+struct Exit {
+    direction: Direction,
+    target: u32, // the room number
+}
+
 struct Room {
-    exits: Vec<Direction>,
+    exits: Vec<Exit>,
 }
 
 fn main() {
     let rooms = vec![
         Room {
-            exits: vec![South],
+            exits: vec![
+                Exit {
+                    direction: South,
+                    target: 1,
+                },
+            ],
         },
         Room {
-            exits: vec![North, South],
+            exits: vec![
+                Exit {
+                    direction: South,
+                    target: 2,
+                },
+                Exit {
+                    direction: North,
+                    target: 0,
+                },
+            ],
         },
     ];
 

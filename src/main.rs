@@ -38,8 +38,14 @@ struct Item {
 }
 
 impl Room {
-    fn unlock(&self, direction: Direction) -> Option<uint> {
-        None
+    fn unlock(&mut self, direction: Direction) -> Option<uint> {
+        let exit = self.exits.mut_iter()
+                             .find(|e| e.direction == direction)
+                             .unwrap();
+
+        exit.locked = false;
+
+        None //we don't want to move rooms as a result of unlocking
     }
 
     fn can_go(&self, direction: Direction) -> bool {
@@ -60,7 +66,7 @@ impl Room {
 }
 
 fn main() {
-    let rooms = vec![
+    let mut rooms = vec![
         Room {
             description: "You find yourself in a room. There is a door to the south and a door to the east.".to_string(),
             exits: vec![
@@ -136,13 +142,13 @@ fn main() {
     println!("* * * A D V E N T U R E * * *\n\n");
 
     while !rooms[current_room].is_escape() {
-        current_room = enter(&rooms[current_room]).unwrap_or(current_room);
+        current_room = enter(rooms.get_mut(current_room)).unwrap_or(current_room);
     }
 
     println!("Congrats! You've escaped.");
 }
 
-fn enter(room: &Room) -> Option<uint> {
+fn enter(room: &mut Room) -> Option<uint> {
     let mut command: Option<Command> = None;
 
     while command == None {

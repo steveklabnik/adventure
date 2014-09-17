@@ -3,6 +3,7 @@ use std::io;
 #[deriving(PartialEq)]
 enum Command {
     Go(Direction),
+    Unlock(Direction),
 }
 
 #[deriving(PartialEq)]
@@ -16,11 +17,17 @@ enum Direction {
 struct Exit {
     direction: Direction,
     target: u32, // the room number
+    locked: bool,
 }
 
 struct Room {
     description: String,
     exits: Vec<Exit>,
+    items: Vec<Item>,
+}
+
+struct Item {
+    name: String,
 }
 
 impl Room {
@@ -48,12 +55,15 @@ fn main() {
                 Exit {
                     direction: South,
                     target: 2,
+                    locked: false,
                 },
                 Exit {
                     direction: East,
                     target: 1,
+                    locked: false,
                 },
             ],
+            items: vec![],
         },
         Room {
             description: "You find yourself in a room. There is a door to the west and a door to the south.".to_string(),
@@ -61,38 +71,51 @@ fn main() {
                 Exit {
                     direction: West,
                     target: 0,
+                    locked: false,
                 },
                 Exit {
                     direction: South,
                     target: 3,
+                    locked: false,
                 },
             ],
+            items: vec![],
         },
         Room {
-            description: "You find yourself in a room. There is a door to the north.".to_string(),
+            description: "You find yourself in a room. There is a door to the north. A key is here.".to_string(),
             exits: vec![
                 Exit {
                     direction: North,
                     target: 0,
+                    locked: false,
                 },
+            ],
+            items: vec![
+                Item {
+                    name: "Key".to_string(),
+                }
             ],
         },
         Room {
-            description: "You find yourself in a room. There is a door to the north and a door to the south.".to_string(),
+            description: "You find yourself in a room. There is a door to the north. The door to the south is locked.".to_string(),
             exits: vec![
                 Exit {
                     direction: North,
                     target: 1,
+                    locked: false,
                 },
                 Exit {
                     direction: South,
                     target: 4,
+                    locked: true,
                 },
             ],
+            items: vec![],
         },
         Room {
             description: "Dungeon exit".to_string(),
             exits: vec![],
+            items: vec![],
         }
     ];
 
@@ -142,6 +165,7 @@ fn enter(room: &Room) -> uint {
         Go(East)  => room.exit_to(East),
         Go(South) => room.exit_to(South),
         Go(West)  => room.exit_to(West),
+        Unlock(_) => 1, // lol
     };
 
     next_room as uint

@@ -38,19 +38,20 @@ struct Item {
 }
 
 impl Room {
-    fn unlock(&self, direction: Direction) {
-
+    fn unlock(&self, direction: Direction) -> Option<uint> {
+        None
     }
 
     fn can_go(&self, direction: Direction) -> bool {
         self.exits.iter().find(|e| e.can_go(direction)).is_some()
     }
 
-    fn exit_to(&self, direction: Direction) -> u32 {
-        self.exits.iter()
+    fn exit_to(&self, direction: Direction) -> Option<uint> {
+        Some(self.exits.iter()
                   .find(|e| e.direction == direction)
                   .unwrap()
-                  .target
+                  .target as uint
+            )
     }
 
     fn is_escape(&self) -> bool {
@@ -176,10 +177,10 @@ fn enter(room: &Room) -> Option<uint> {
     }
 
     match command.unwrap() {
-        Go(North) => Some(room.exit_to(North) as uint),
-        Go(East)  => Some(room.exit_to(East) as uint),
-        Go(South) => Some(room.exit_to(South) as uint),
-        Go(West)  => Some(room.exit_to(West) as uint),
-        Unlock(d) => { room.unlock(d); None },
+        Go(North) => room.exit_to(North),
+        Go(East)  => room.exit_to(East),
+        Go(South) => room.exit_to(South),
+        Go(West)  => room.exit_to(West),
+        Unlock(d) => room.unlock(d),
     }
 }

@@ -38,6 +38,10 @@ struct Item {
 }
 
 impl Room {
+    fn unlock(&self, direction: Direction) {
+
+    }
+
     fn can_go(&self, direction: Direction) -> bool {
         self.exits.iter().find(|e| e.can_go(direction)).is_some()
     }
@@ -131,13 +135,13 @@ fn main() {
     println!("* * * A D V E N T U R E * * *\n\n");
 
     while !rooms[current_room].is_escape() {
-        current_room = enter(&rooms[current_room]);
+        current_room = enter(&rooms[current_room]).unwrap_or(current_room);
     }
 
     println!("Congrats! You've escaped.");
 }
 
-fn enter(room: &Room) -> uint {
+fn enter(room: &Room) -> Option<uint> {
     let mut command: Option<Command> = None;
 
     while command == None {
@@ -160,6 +164,10 @@ fn enter(room: &Room) -> uint {
             "e" if room.can_go(East)  => Some(Go(East)),
             "s" if room.can_go(South) => Some(Go(South)),
             "w" if room.can_go(West)  => Some(Go(West)),
+            "un" => Some(Unlock(North)),
+            "ue" => Some(Unlock(East)),
+            "us" => Some(Unlock(South)),
+            "uw" => Some(Unlock(West)),
             _   => {
                 println!("Please type a valid command.");
                 continue;
@@ -167,13 +175,11 @@ fn enter(room: &Room) -> uint {
         };
     }
 
-    let next_room = match command.unwrap() {
-        Go(North) => room.exit_to(North),
-        Go(East)  => room.exit_to(East),
-        Go(South) => room.exit_to(South),
-        Go(West)  => room.exit_to(West),
-        Unlock(_) => 1, // lol
-    };
-
-    next_room as uint
+    match command.unwrap() {
+        Go(North) => Some(room.exit_to(North) as uint),
+        Go(East)  => Some(room.exit_to(East) as uint),
+        Go(South) => Some(room.exit_to(South) as uint),
+        Go(West)  => Some(room.exit_to(West) as uint),
+        Unlock(d) => { room.unlock(d); None },
+    }
 }

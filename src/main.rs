@@ -63,6 +63,10 @@ impl Room {
     fn is_escape(&self) -> bool {
         self.exits.len() == 0
     }
+
+    fn is_locked(&self, direction: Direction) -> bool {
+        self.exits.iter().find(|e| e.locked).is_some()
+    }
 }
 
 fn main() {
@@ -162,6 +166,15 @@ fn enter(room: &mut Room) -> Option<uint> {
                 South => println!("* Go (s)outh"),
                 West  => println!("* Go (w)est"),
             }
+
+            if exit.locked {
+                match exit.direction {
+                    North => println!("* (un) unlock north"),
+                    East  => println!("* (ue) unlock east"),
+                    South => println!("* (us) unlock south"),
+                    West  => println!("* (uw) unlock west"),
+                }
+            }
         }
 
         let input = io::stdin().read_line().ok().expect("Failed to read line");
@@ -171,10 +184,12 @@ fn enter(room: &mut Room) -> Option<uint> {
             "e" if room.can_go(East)  => Some(Go(East)),
             "s" if room.can_go(South) => Some(Go(South)),
             "w" if room.can_go(West)  => Some(Go(West)),
-            "un" => Some(Unlock(North)),
-            "ue" => Some(Unlock(East)),
-            "us" => Some(Unlock(South)),
-            "uw" => Some(Unlock(West)),
+
+            "un" if room.is_locked(North) => Some(Unlock(North)),
+            "ue" if room.is_locked(East)  => Some(Unlock(East)),
+            "us" if room.is_locked(South) => Some(Unlock(South)),
+            "uw" if room.is_locked(West)  => Some(Unlock(West)),
+
             _   => {
                 println!("Please type a valid command.");
                 continue;

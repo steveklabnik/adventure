@@ -16,7 +16,7 @@ enum Direction {
 
 struct Exit {
     direction: Direction,
-    target: u32, // the room number
+    target: uint, // the room number
     locked: bool,
 }
 
@@ -50,7 +50,7 @@ impl Room {
         Some(self.exits.iter()
                   .find(|e| e.direction == direction)
                   .unwrap()
-                  .target as uint
+                  .target
             )
     }
 

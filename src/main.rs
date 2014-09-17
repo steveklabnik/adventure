@@ -22,7 +22,8 @@ struct Exit {
 
 impl Exit {
     fn can_go(&self, direction: Direction) -> bool {
-        self.direction == direction
+        self.direction == direction &&
+        !self.locked
     }
 }
 

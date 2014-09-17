@@ -20,6 +20,12 @@ struct Exit {
     locked: bool,
 }
 
+impl Exit {
+    fn can_go(&self, direction: Direction) -> bool {
+        self.direction == direction
+    }
+}
+
 struct Room {
     description: String,
     exits: Vec<Exit>,
@@ -32,7 +38,7 @@ struct Item {
 
 impl Room {
     fn can_go(&self, direction: Direction) -> bool {
-        self.exits.iter().find(|e| e.direction == direction).is_some()
+        self.exits.iter().find(|e| e.can_go(direction)).is_some()
     }
 
     fn exit_to(&self, direction: Direction) -> u32 {

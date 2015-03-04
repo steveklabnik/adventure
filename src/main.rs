@@ -16,7 +16,7 @@ enum Direction {
 
 struct Exit {
     direction: Direction,
-    target: uint, // the room number
+    target: usize, // the room number
     locked: bool,
 }
 
@@ -38,7 +38,7 @@ struct Item {
 }
 
 impl Room {
-    fn unlock(&mut self, direction: Direction) -> Option<uint> {
+    fn unlock(&mut self, direction: Direction) -> Option<usize> {
         let exit = self.exits.mut_iter()
                              .find(|e| e.direction == direction)
                              .unwrap();
@@ -52,7 +52,7 @@ impl Room {
         self.exits.iter().find(|e| e.can_go(direction)).is_some()
     }
 
-    fn exit_to(&self, direction: Direction) -> Option<uint> {
+    fn exit_to(&self, direction: Direction) -> Option<usize> {
         Some(self.exits.iter()
                   .find(|e| e.direction == direction)
                   .unwrap()
@@ -152,7 +152,7 @@ fn main() {
     println!("Congrats! You've escaped.");
 }
 
-fn enter(room: &mut Room) -> Option<uint> {
+fn enter(room: &mut Room) -> Option<usize> {
     let mut command: Option<Command> = None;
 
     while command == None {

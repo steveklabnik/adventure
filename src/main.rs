@@ -1,12 +1,12 @@
 use std::io;
 
-#[deriving(PartialEq)]
+#[derive(PartialEq)]
 enum Command {
     Go(Direction),
     Unlock(Direction),
 }
 
-#[deriving(PartialEq)]
+#[derive(PartialEq)]
 enum Direction {
     North,
     East,

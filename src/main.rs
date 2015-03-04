@@ -1,4 +1,4 @@
-use std::io;
+use std::old_io;
 
 #[derive(PartialEq)]
 enum Command {
@@ -177,7 +177,10 @@ fn enter(room: &mut Room) -> Option<usize> {
             }
         }
 
-        let input = io::stdin().read_line().ok().expect("Failed to read line");
+        let input = old_io::stdin()
+                        .read_line()
+                        .ok()
+                        .expect("Failed to read line");
 
         command = match input.as_slice().trim() {
             "n" if room.can_go(North) => Some(Go(North)),

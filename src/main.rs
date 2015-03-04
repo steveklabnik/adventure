@@ -70,17 +70,23 @@ impl Room {
 }
 
 fn main() {
+
+    let south = Direction::South;
+    let east = Direction::East;
+    let west = Direction::West;
+    let north = Direction::North;
+
     let mut rooms = vec![
         Room {
             description: "You find yourself in a room. There is a door to the south and a door to the east.".to_string(),
             exits: vec![
                 Exit {
-                    direction: South,
+                    direction: south,
                     target: 2,
                     locked: false,
                 },
                 Exit {
-                    direction: East,
+                    direction: east,
                     target: 1,
                     locked: false,
                 },
@@ -91,12 +97,12 @@ fn main() {
             description: "You find yourself in a room. There is a door to the west and a door to the south.".to_string(),
             exits: vec![
                 Exit {
-                    direction: West,
+                    direction: west,
                     target: 0,
                     locked: false,
                 },
                 Exit {
-                    direction: South,
+                    direction: south,
                     target: 3,
                     locked: false,
                 },
@@ -107,7 +113,7 @@ fn main() {
             description: "You find yourself in a room. There is a door to the north. A key is here.".to_string(),
             exits: vec![
                 Exit {
-                    direction: North,
+                    direction: north,
                     target: 0,
                     locked: false,
                 },
@@ -122,12 +128,12 @@ fn main() {
             description: "You find yourself in a room. There is a door to the north. The door to the south is locked.".to_string(),
             exits: vec![
                 Exit {
-                    direction: North,
+                    direction: north,
                     target: 1,
                     locked: false,
                 },
                 Exit {
-                    direction: South,
+                    direction: south,
                     target: 4,
                     locked: true,
                 },
@@ -153,6 +159,15 @@ fn main() {
 }
 
 fn enter(room: &mut Room) -> Option<usize> {
+
+    let south = Direction::South;
+    let east = Direction::East;
+    let west = Direction::West;
+    let north = Direction::North;
+
+    let go = Command::Go;
+    let unlock = Command::Unlock;
+
     let mut command: Option<Command> = None;
 
     while command == None {
@@ -161,18 +176,18 @@ fn enter(room: &mut Room) -> Option<usize> {
 
         for exit in room.exits.iter() {
             match exit.direction {
-                North => println!("* Go (n)orth"),
-                East  => println!("* Go (e)ast"),
-                South => println!("* Go (s)outh"),
-                West  => println!("* Go (w)est"),
+                north => println!("* Go (n)orth"),
+                east  => println!("* Go (e)ast"),
+                south => println!("* Go (s)outh"),
+                west  => println!("* Go (w)est"),
             }
 
             if exit.locked {
                 match exit.direction {
-                    North => println!("* (un) unlock north"),
-                    East  => println!("* (ue) unlock east"),
-                    South => println!("* (us) unlock south"),
-                    West  => println!("* (uw) unlock west"),
+                    north => println!("* (un) unlock north"),
+                    east  => println!("* (ue) unlock east"),
+                    south => println!("* (us) unlock south"),
+                    west  => println!("* (uw) unlock west"),
                 }
             }
         }
@@ -183,15 +198,15 @@ fn enter(room: &mut Room) -> Option<usize> {
                         .expect("Failed to read line");
 
         command = match input.as_slice().trim() {
-            "n" if room.can_go(North) => Some(Go(North)),
-            "e" if room.can_go(East)  => Some(Go(East)),
-            "s" if room.can_go(South) => Some(Go(South)),
-            "w" if room.can_go(West)  => Some(Go(West)),
+            "n" if room.can_go(north) => Some(go(north)),
+            "e" if room.can_go(east)  => Some(go(east)),
+            "s" if room.can_go(south) => Some(go(south)),
+            "w" if room.can_go(west)  => Some(go(west)),
 
-            "un" if room.is_locked(North) => Some(Unlock(North)),
-            "ue" if room.is_locked(East)  => Some(Unlock(East)),
-            "us" if room.is_locked(South) => Some(Unlock(South)),
-            "uw" if room.is_locked(West)  => Some(Unlock(West)),
+            "un" if room.is_locked(north) => Some(unlock(north)),
+            "ue" if room.is_locked(east)  => Some(unlock(east)),
+            "us" if room.is_locked(south) => Some(unlock(south)),
+            "uw" if room.is_locked(west)  => Some(unlock(west)),
 
             _   => {
                 println!("Please type a valid command.");
@@ -201,10 +216,10 @@ fn enter(room: &mut Room) -> Option<usize> {
     }
 
     match command.unwrap() {
-        Go(North) => room.exit_to(North),
-        Go(East)  => room.exit_to(East),
-        Go(South) => room.exit_to(South),
-        Go(West)  => room.exit_to(West),
-        Unlock(d) => room.unlock(d),
+        Command::Go(north) => room.exit_to(north),
+        Command::Go(east)  => room.exit_to(east),
+        Command::Go(south) => room.exit_to(south),
+        Command::Go(west)  => room.exit_to(west),
+        Command::Unlock(d) => room.unlock(d),
     }
 }

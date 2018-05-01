@@ -1,4 +1,4 @@
-use std::old_io;
+use std::io;
 
 #[derive(PartialEq)]
 enum Command {
@@ -21,8 +21,8 @@ struct Exit {
 }
 
 impl Exit {
-    fn can_go(&self, direction: Direction) -> bool {
-        self.direction == direction &&
+    fn can_go(&self, direction: &Direction) -> bool {
+        self.direction == *direction &&
         !self.locked
     }
 }
@@ -39,7 +39,7 @@ struct Item {
 
 impl Room {
     fn unlock(&mut self, direction: Direction) -> Option<usize> {
-        let exit = self.exits.mut_iter()
+        let exit = self.exits.iter_mut()
                              .find(|e| e.direction == direction)
                              .unwrap();
 
@@ -49,7 +49,7 @@ impl Room {
     }
 
     fn can_go(&self, direction: Direction) -> bool {
-        self.exits.iter().find(|e| e.can_go(direction)).is_some()
+        self.exits.iter().find(|e| e.can_go(&direction)).is_some()
     }
 
     fn exit_to(&self, direction: Direction) -> Option<usize> {
@@ -71,10 +71,10 @@ impl Room {
 
 fn main() {
 
-    let south = Direction::South;
-    let east = Direction::East;
-    let west = Direction::West;
-    let north = Direction::North;
+    use Direction::South as south;
+    use Direction::East as east;
+    use Direction::West as west;
+    use Direction::North as north;
 
     let mut rooms = vec![
         Room {
@@ -152,7 +152,7 @@ fn main() {
     println!("* * * A D V E N T U R E * * *\n\n");
 
     while !rooms[current_room].is_escape() {
-        current_room = enter(rooms.get_mut(current_room)).unwrap_or(current_room);
+        current_room = enter(rooms.get_mut(current_room).unwrap()).unwrap_or(current_room);
     }
 
     println!("Congrats! You've escaped.");
@@ -160,10 +160,10 @@ fn main() {
 
 fn enter(room: &mut Room) -> Option<usize> {
 
-    let south = Direction::South;
-    let east = Direction::East;
-    let west = Direction::West;
-    let north = Direction::North;
+    use Direction::South as south;
+    use Direction::East as east;
+    use Direction::West as west;
+    use Direction::North as north;
 
     let go = Command::Go;
     let unlock = Command::Unlock;
@@ -192,12 +192,14 @@ fn enter(room: &mut Room) -> Option<usize> {
             }
         }
 
-        let input = old_io::stdin()
-                        .read_line()
-                        .ok()
-                        .expect("Failed to read line");
+        let mut input = String::new();
+        
+        io::stdin()
+            .read_line(&mut input)
+            .ok()
+            .expect("Failed to read line");
 
-        command = match input.as_slice().trim() {
+        command = match input.trim() {
             "n" if room.can_go(north) => Some(go(north)),
             "e" if room.can_go(east)  => Some(go(east)),
             "s" if room.can_go(south) => Some(go(south)),
